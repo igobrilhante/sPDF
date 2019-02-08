@@ -64,6 +64,15 @@ class PdfConfigSpec extends WordSpec with Matchers {
         case None => true should equal(true)
       }
     }
+
+    "generate the --custom-header parameter" in {
+      val config = new PdfConfig {
+        customHeader := "Authorization \"Basic ectectect\""
+        customHeaderPropagation := true
+        noCustomHeaderPropagation := true
+      }
+      PdfConfig.toParameters(config) should equal(Seq("--custom-header", "Authorization", "\"Basic ectectect\"", "--custom-header-propagation", "--no-custom-header-propagation", "--encoding", "UTF-8"))
+    }    
   }
 
 }

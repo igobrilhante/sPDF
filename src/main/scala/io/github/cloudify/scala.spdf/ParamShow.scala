@@ -48,8 +48,15 @@ object ParamShow {
       formatParam(name, Some(value.value))
   }
 
-  private def formatParam(name: String, value: Option[String]): Iterable[String] =
-    Seq(Some("--" + name), value).flatten
+  private def formatParam(name: String, value: Option[String]): Iterable[String] = {
+    val r = "([^\"]\\S*|\".+?\")\\s*".r
+
+    val v = value.fold(Seq[Option[String]]()){ s =>
+      val list = for (m <- r.findAllMatchIn(s)) yield Some(m.group(1))
+      list.toSeq
+    }
+    (Seq(Some("--" + name)) ++ v).flatten
+  }
 
   private def formatParam(name: String, value: Boolean): Iterable[String] = if(value) {
     Some("--" + name)

@@ -7,6 +7,7 @@ import org.scalatest.WordSpec
 
 class WrappedPdfSpec extends WordSpec with Matchers {
 
+
   "A Pdf" should {
 
     PdfConfig.findExecutable match {

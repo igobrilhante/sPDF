@@ -7,6 +7,12 @@ import org.scalatest.WordSpec
 
 class PdfSpec extends WordSpec with Matchers {
 
+  val pdfConfig = new PdfConfig {
+        customHeader := "Authorization \"Basic ectectect\""
+        customHeaderPropagation := true
+        noCustomHeaderPropagation := true
+      }
+
   "A Pdf" should {
 
     "require the executionPath config" in {
@@ -34,7 +40,7 @@ class PdfSpec extends WordSpec with Matchers {
 
           val file = File.createTempFile("scala.spdf", "pdf")
 
-          val pdf = Pdf(PdfConfig.default)
+          val pdf = Pdf(pdfConfig)
 
           pdf.run(page, file)
 

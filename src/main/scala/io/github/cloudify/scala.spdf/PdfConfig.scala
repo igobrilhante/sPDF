@@ -15,6 +15,12 @@ trait PdfConfig {
 
   val allow = Parameter[Iterable[String]]("allow")
 
+  val customHeader = Parameter[String]("custom-header")
+
+  val customHeaderPropagation = Parameter[Boolean]("custom-header-propagation")
+
+  val noCustomHeaderPropagation = Parameter[Boolean]("no-custom-header-propagation")
+
   val defaultHeader = Parameter[Boolean]("default-header")
 
   val disableExternalLinks = Parameter[Boolean]("disable-external-links")
@@ -176,6 +182,9 @@ object PdfConfig {
     Seq(
       allow.toParameter,
       background.toParameter,
+      customHeader.toParameter,
+      customHeaderPropagation.toParameter,
+      noCustomHeaderPropagation.toParameter,
       defaultHeader.toParameter,
       disableExternalLinks.toParameter,
       disableInternalLinks.toParameter,

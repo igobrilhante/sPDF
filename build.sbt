@@ -1,9 +1,11 @@
 
+import com.amazonaws.services.s3.model.Region
+
 name := "sPDF"
 
 description := "Create PDFs using plain old HTML+CSS. Uses wkhtmltopdf on the back-end which renders HTML using Webkit."
 
-homepage := Some(url("https://github.com/cloudify/sPDF"))
+homepage := Some(url("https://github.com/igobrilhante/sPDF"))
 
 startYear := Some(2013)
 
@@ -11,7 +13,7 @@ licenses := Seq(
   ("MIT", url("http://opensource.org/licenses/MIT"))
 )
 
-organization := "io.github.cloudify"
+organization := "br.com.levarti"
 
 scalaVersion := "2.12.0"
 
@@ -31,13 +33,6 @@ parallelExecution in Test := false
 
 logLevel in compile := Level.Warn
 
-scmInfo := Some(
-  ScmInfo(
-    url("https://github.com/cloudify/sPDF"),
-    "scm:git:https://github.com/cloudify/sPDF.git",
-    Some("scm:git:git@github.com:cloudify/sPDF.git")
-  )
-)
 
 // add dependencies on standard Scala modules, in a way
 // supporting cross-version publishing
@@ -59,18 +54,6 @@ libraryDependencies ++= Seq (
   "org.mockito"     %  "mockito-all"    % "1.10.8"  % "test"
 )
 
-// publishing
-publishMavenStyle := true
-
-publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (version.value.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-}
-
-credentials += Credentials(Path.userHome / ".credentials.sonatype")
 
 publishArtifact in Test := false
 
@@ -78,18 +61,14 @@ publishArtifact in Test := false
 
 // publishArtifact in (Compile, packageSrc) := false
 
-pomIncludeRepository := { _ => false }
+isSnapshot := true
+s3region := Region.US_Standard
+publishMavenStyle := false
 
-pomExtra := (
-  <developers>
-    <developer>
-      <id>cloudify</id>
-      <name>Federico Feroldi</name>
-      <email>pix@yahoo.it</email>
-      <url>http://www.pixzone.com</url>
-    </developer>
-  </developers>
-)
+publishTo := {
+  val prefix = if (isSnapshot.value) "snapshots" else "releases"
+  Some(s3resolver.value(s"$prefix s3 bucket", s3("wp-repository/" + prefix)) withIvyPatterns)
+}
 
 // Josh Suereth's step-by-step guide to publishing on sonatype
 // http://www.scala-sbt.org/using_sonatype.html
